@@ -28,6 +28,12 @@ body{
     padding:22px;
     text-align:center;
     box-shadow:0 15px 40px rgba(0,0,0,.3);
+    animation:cardIn .8s ease;
+}
+
+@keyframes cardIn{
+    from{transform:scale(.8);opacity:0}
+    to{transform:scale(1);opacity:1}
 }
 
 .carousel{
@@ -42,7 +48,7 @@ body{
     display:flex;
     width:100%;
     height:100%;
-    transition:transform .7s ease;
+    transition:transform .7s cubic-bezier(.77,0,.18,1);
 }
 
 .slides img{
@@ -55,15 +61,21 @@ h1{
     font-size:22px;
     color:#ff4d6d;
     margin:15px 0 20px;
+    animation:heartbeat 2s infinite;
+}
+
+@keyframes heartbeat{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.05)}
 }
 
 .buttons{
     position:relative;
-    height:150px;
+    height:120px;
     display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    padding:0 35px;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
 }
 
 button{
@@ -72,6 +84,7 @@ button{
     border-radius:15px;
     font-size:16px;
     cursor:pointer;
+    transition:.25s;
 }
 
 #yes{
@@ -80,12 +93,13 @@ button{
     box-shadow:0 5px 15px rgba(255,77,109,.6);
 }
 
+#yes:hover{
+    transform:scale(1.12);
+}
+
 #no{
     background:#ddd;
     position:absolute;
-    right:35px;
-    bottom:0;
-    transform:none !important;
 }
 
 /* MODAL */
@@ -99,6 +113,7 @@ button{
     opacity:0;
     pointer-events:none;
     transition:.4s;
+    backdrop-filter:blur(4px);
 }
 
 .modal.active{
@@ -111,8 +126,15 @@ button{
     padding:30px;
     border-radius:26px;
     text-align:center;
+    animation:modalIn .5s cubic-bezier(.68,-0.6,.32,1.6);
     max-width:320px;
     position:relative;
+    box-shadow:0 0 40px rgba(255,77,109,.6);
+}
+
+@keyframes modalIn{
+    from{transform:scale(.4);opacity:0}
+    to{transform:scale(1);opacity:1}
 }
 
 .close{
@@ -125,6 +147,10 @@ button{
     cursor:pointer;
 }
 
+.close:hover{
+    transform:scale(1.2);
+}
+
 .timer{
     margin-top:15px;
     font-size:18px;
@@ -132,7 +158,7 @@ button{
     color:#ff4d6d;
 }
 
-/* CORAZONES */
+/* corazones flotando */
 .heart{
     position:fixed;
     animation:float 5s linear forwards;
@@ -140,8 +166,8 @@ button{
 }
 
 @keyframes float{
-    from{transform:translateY(0);opacity:1}
-    to{transform:translateY(-700px);opacity:0}
+    from{transform:translateY(0) scale(1);opacity:1}
+    to{transform:translateY(-750px) scale(1.7);opacity:0}
 }
 </style>
 </head>
@@ -165,8 +191,8 @@ button{
     <h1>💖 ¿Quieres ser mi 14 de Febrero? 💖</h1>
 
     <div class="buttons">
-        <button id="yes">Sí 💘</button>
-        <button id="no">No 🙄</button>
+        <button id="yes">Sí </button>
+        <button id="no">No </button>
     </div>
 </div>
 
@@ -174,8 +200,9 @@ button{
     <div class="modal-content">
         <span class="close" id="closeModal">&times;</span>
         <h2>💞 Cuenta regresiva para San Valentín 💞</h2>
+        <p>Falta muy poquito para nuestro primer 14 juntos❤️</p>
         <div class="timer" id="timer"></div>
-        <p>Te amo muchísimo 💖</p>
+        <p>Te amo muchísimo, Sopholoka 💖</p>
     </div>
 </div>
 
@@ -189,7 +216,11 @@ setInterval(() => {
     index++;
     if(index >= total){
         index = 0;
+        slides.style.transition = "none";
         slides.style.transform = "translateX(0)";
+        setTimeout(()=>{
+            slides.style.transition = "transform .7s cubic-bezier(.77,0,.18,1)";
+        },50);
     } else {
         slides.style.transform = `translateX(-${index * 100}%)`;
     }
@@ -202,12 +233,11 @@ const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
 const music = document.getElementById("music");
 
-noBtn.addEventListener("mouseenter", mover);
-noBtn.addEventListener("touchstart", mover);
+noBtn.addEventListener("mouseover", mover);
+noBtn.addEventListener("click", mover);
 
 function mover(){
     const cont = document.querySelector(".buttons");
-
     const maxX = cont.clientWidth - noBtn.offsetWidth;
     const maxY = cont.clientHeight - noBtn.offsetHeight;
 
@@ -216,15 +246,13 @@ function mover(){
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
-
-    if(navigator.vibrate) navigator.vibrate(40);
 }
 
-/* ===== MODAL ===== */
+/* ===== MODAL + CORAZONES + MÚSICA ===== */
 yesBtn.addEventListener("click",()=>{
     modal.classList.add("active");
-    iniciarCuenta();
     lanzarCorazones();
+    iniciarCuenta();
     music.currentTime = 0;
     music.play().catch(()=>{});
 });
@@ -254,7 +282,7 @@ function iniciarCuenta(){
 
 /* ===== Corazones ===== */
 function lanzarCorazones(){
-    for(let i=0;i<35;i++){
+    for(let i=0;i<40;i++){
         setTimeout(crearCorazon,i*120);
     }
 }
@@ -265,6 +293,7 @@ function crearCorazon(){
     h.innerHTML = "💖";
     h.style.left = Math.random()*100 + "vw";
     h.style.bottom = "-20px";
+    h.style.fontSize = (18 + Math.random()*22) + "px";
     document.body.appendChild(h);
     setTimeout(()=>h.remove(),5000);
 }
