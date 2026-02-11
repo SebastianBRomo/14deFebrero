@@ -24,10 +24,10 @@ body{
 .card{
     background:white;
     width:340px;
-    border-radius:28px;
+    border-radius:30px;
     padding:22px;
     text-align:center;
-    box-shadow:0 15px 35px rgba(0,0,0,.25);
+    box-shadow:0 15px 40px rgba(0,0,0,.3);
 }
 
 .carousel{
@@ -42,7 +42,7 @@ body{
     display:flex;
     width:100%;
     height:100%;
-    transition:transform 0.6s ease-in-out;
+    transition:transform .7s ease;
 }
 
 .slides img{
@@ -59,42 +59,40 @@ h1{
 
 .buttons{
     position:relative;
-    height:130px;
+    height:150px;
     display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
+    justify-content:space-between;
+    align-items:flex-end;
+    padding:0 35px;
 }
 
 button{
-    padding:12px 26px;
+    padding:13px 28px;
     border:none;
-    border-radius:14px;
+    border-radius:15px;
     font-size:16px;
     cursor:pointer;
-    transition:.25s;
 }
 
 #yes{
-    background:#ff4d6d;
+    background:linear-gradient(135deg,#ff4d6d,#ff2d55);
     color:white;
-}
-
-#yes:hover{
-    transform:scale(1.1);
+    box-shadow:0 5px 15px rgba(255,77,109,.6);
 }
 
 #no{
-    background:#ccc;
+    background:#ddd;
     position:absolute;
-    top:70px;
+    right:35px;
+    bottom:0;
+    transform:none !important;
 }
 
-/* Modal */
+/* MODAL */
 .modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.6);
+    background:rgba(0,0,0,.65);
     display:flex;
     justify-content:center;
     align-items:center;
@@ -111,25 +109,20 @@ button{
 .modal-content{
     background:white;
     padding:30px;
-    border-radius:22px;
+    border-radius:26px;
     text-align:center;
-    animation:pop .5s;
     max-width:320px;
     position:relative;
 }
 
-.modal-content .close{
+.close{
     position:absolute;
-    top:10px;
-    right:14px;
-    font-size:22px;
-    cursor:pointer;
+    top:12px;
+    right:16px;
+    font-size:26px;
+    font-weight:bold;
     color:#ff4d6d;
-}
-
-@keyframes pop{
-    0%{transform:scale(.6)}
-    100%{transform:scale(1)}
+    cursor:pointer;
 }
 
 .timer{
@@ -139,10 +132,10 @@ button{
     color:#ff4d6d;
 }
 
-/* corazones */
+/* CORAZONES */
 .heart{
     position:fixed;
-    animation:float 4s linear forwards;
+    animation:float 5s linear forwards;
     pointer-events:none;
 }
 
@@ -155,21 +148,21 @@ button{
 
 <body>
 
-<audio id="music" loop>
-    <source src="music.mp3" type="audio/mpeg">
+<audio id="music" preload="auto" loop>
+    <source src="i_just_died_in_your_arms.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card">
 
     <div class="carousel">
         <div class="slides" id="slides">
-            <img src="foto1.jpg">
-            <img src="foto2.jpg">
-            <img src="foto3.jpg">
+            <img src="foto1.jpeg">
+            <img src="foto2.jpeg">
+            <img src="foto3.jpeg">
         </div>
     </div>
 
-    <h1>💖 ¿Quieres ser mi novia? 💖</h1>
+    <h1>💖 ¿Quieres ser mi 14 de Febrero? 💖</h1>
 
     <div class="buttons">
         <button id="yes">Sí 💘</button>
@@ -179,9 +172,8 @@ button{
 
 <div class="modal" id="modal">
     <div class="modal-content">
-        <div class="close" id="close">✖</div>
+        <span class="close" id="closeModal">&times;</span>
         <h2>💞 Cuenta regresiva para San Valentín 💞</h2>
-        <p>Falta muy poquito para nuestro primer 14 juntos 🥹❤️</p>
         <div class="timer" id="timer"></div>
         <p>Te amo muchísimo 💖</p>
     </div>
@@ -194,43 +186,50 @@ let index = 0;
 const total = slides.children.length;
 
 setInterval(() => {
-    index = (index + 1) % total;
-    slides.style.transform = `translateX(-${index * 100}%)`;
+    index++;
+    if(index >= total){
+        index = 0;
+        slides.style.transform = "translateX(0)";
+    } else {
+        slides.style.transform = `translateX(-${index * 100}%)`;
+    }
 }, 3000);
 
 /* ===== Botón NO que huye ===== */
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 const modal = document.getElementById("modal");
-const closeBtn = document.getElementById("close");
+const closeModal = document.getElementById("closeModal");
 const music = document.getElementById("music");
 
-["mouseenter","touchstart"].forEach(evt=>{
-    noBtn.addEventListener(evt,mover);
-});
+noBtn.addEventListener("mouseenter", mover);
+noBtn.addEventListener("touchstart", mover);
 
 function mover(){
-    const cont=document.querySelector(".buttons");
-    const maxX=cont.clientWidth-noBtn.offsetWidth;
-    const maxY=cont.clientHeight-noBtn.offsetHeight;
+    const cont = document.querySelector(".buttons");
 
-    const x=Math.random()*maxX;
-    const y=Math.random()*maxY + 50;
+    const maxX = cont.clientWidth - noBtn.offsetWidth;
+    const maxY = cont.clientHeight - noBtn.offsetHeight;
 
-    noBtn.style.left=x+"px";
-    noBtn.style.top=y+"px";
-    noBtn.style.transform=`rotate(${Math.random()*30-15}deg)`;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    if(navigator.vibrate) navigator.vibrate(40);
 }
 
-/* ===== MODAL + MUSICA ===== */
+/* ===== MODAL ===== */
 yesBtn.addEventListener("click",()=>{
     modal.classList.add("active");
-    music.play();
-    lanzarCorazones();
     iniciarCuenta();
+    lanzarCorazones();
+    music.currentTime = 0;
+    music.play().catch(()=>{});
 });
 
-closeBtn.addEventListener("click",()=>{
+closeModal.addEventListener("click",()=>{
     modal.classList.remove("active");
     music.pause();
 });
@@ -261,14 +260,13 @@ function lanzarCorazones(){
 }
 
 function crearCorazon(){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.innerHTML="💖";
-    h.style.left=Math.random()*100+"vw";
-    h.style.bottom="0";
-    h.style.fontSize=(18+Math.random()*20)+"px";
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "💖";
+    h.style.left = Math.random()*100 + "vw";
+    h.style.bottom = "-20px";
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),4000);
+    setTimeout(()=>h.remove(),5000);
 }
 </script>
 
