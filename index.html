@@ -24,16 +24,10 @@ body{
 .card{
     background:white;
     width:340px;
-    border-radius:30px;
+    border-radius:28px;
     padding:22px;
     text-align:center;
-    box-shadow:0 15px 40px rgba(0,0,0,.3);
-    animation:cardIn .8s ease;
-}
-
-@keyframes cardIn{
-    from{transform:scale(.8);opacity:0}
-    to{transform:scale(1);opacity:1}
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
 }
 
 .carousel{
@@ -48,7 +42,7 @@ body{
     display:flex;
     width:100%;
     height:100%;
-    transition:transform .7s cubic-bezier(.77,0,.18,1);
+    transition:transform 0.6s ease-in-out;
 }
 
 .slides img{
@@ -61,59 +55,52 @@ h1{
     font-size:22px;
     color:#ff4d6d;
     margin:15px 0 20px;
-    animation:heartbeat 2s infinite;
-}
-
-@keyframes heartbeat{
-    0%,100%{transform:scale(1)}
-    50%{transform:scale(1.05)}
 }
 
 .buttons{
     position:relative;
-    height:80px;
+    height:130px;
     display:flex;
-    justify-content:center;
+    flex-direction:column;
     align-items:center;
-    gap:35px;
+    gap:20px;
 }
 
 button{
-    padding:13px 28px;
+    padding:12px 26px;
     border:none;
-    border-radius:15px;
+    border-radius:14px;
     font-size:16px;
     cursor:pointer;
     transition:.25s;
 }
 
 #yes{
-    background:linear-gradient(135deg,#ff4d6d,#ff2d55);
+    background:#ff4d6d;
     color:white;
-    box-shadow:0 5px 15px rgba(255,77,109,.6);
 }
 
 #yes:hover{
-    transform:scale(1.12);
+    transform:scale(1.1);
 }
 
 #no{
-    background:#ddd;
+    background:#ccc;
     position:absolute;
+    top:70px;
 }
 
-/* MODAL */
+/* Modal */
 .modal{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.65);
+    background:rgba(0,0,0,.6);
     display:flex;
     justify-content:center;
     align-items:center;
     opacity:0;
     pointer-events:none;
     transition:.4s;
-    backdrop-filter:blur(4px);
 }
 
 .modal.active{
@@ -124,31 +111,25 @@ button{
 .modal-content{
     background:white;
     padding:30px;
-    border-radius:26px;
+    border-radius:22px;
     text-align:center;
-    animation:modalIn .5s cubic-bezier(.68,-0.6,.32,1.6);
+    animation:pop .5s;
     max-width:320px;
     position:relative;
-    box-shadow:0 0 40px rgba(255,77,109,.6);
 }
 
-@keyframes modalIn{
-    from{transform:scale(.4);opacity:0}
-    to{transform:scale(1);opacity:1}
-}
-
-.close{
+.modal-content .close{
     position:absolute;
-    top:12px;
-    right:16px;
-    font-size:26px;
-    font-weight:bold;
-    color:#ff4d6d;
+    top:10px;
+    right:14px;
+    font-size:22px;
     cursor:pointer;
+    color:#ff4d6d;
 }
 
-.close:hover{
-    transform:scale(1.2);
+@keyframes pop{
+    0%{transform:scale(.6)}
+    100%{transform:scale(1)}
 }
 
 .timer{
@@ -158,51 +139,51 @@ button{
     color:#ff4d6d;
 }
 
-/* corazones flotando */
+/* corazones */
 .heart{
     position:fixed;
-    animation:float 5s linear forwards;
+    animation:float 4s linear forwards;
     pointer-events:none;
 }
 
 @keyframes float{
-    from{transform:translateY(0) scale(1);opacity:1}
-    to{transform:translateY(-750px) scale(1.7);opacity:0}
+    from{transform:translateY(0);opacity:1}
+    to{transform:translateY(-700px);opacity:0}
 }
 </style>
 </head>
 
 <body>
 
-<audio id="music" preload="auto" loop>
-    <source src="i_just_died_in_your_arms.mp3" type="audio/mpeg">
+<audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card">
 
     <div class="carousel">
         <div class="slides" id="slides">
-            <img src="foto1.jpeg">
-            <img src="foto2.jpeg">
-            <img src="foto3.jpeg">
+            <img src="foto1.jpg">
+            <img src="foto2.jpg">
+            <img src="foto3.jpg">
         </div>
     </div>
 
-    <h1>💖 ¿Quieres ser mi 14 de Febrero? 💖</h1>
+    <h1>💖 ¿Quieres ser mi novia? 💖</h1>
 
     <div class="buttons">
-        <button id="yes">Sí </button>
-        <button id="no">No </button>
+        <button id="yes">Sí 💘</button>
+        <button id="no">No 🙄</button>
     </div>
 </div>
 
 <div class="modal" id="modal">
     <div class="modal-content">
-        <span class="close" id="closeModal">&times;</span>
+        <div class="close" id="close">✖</div>
         <h2>💞 Cuenta regresiva para San Valentín 💞</h2>
-        <p>Falta muy poquito para nuestro primer 14 juntos❤️</p>
+        <p>Falta muy poquito para nuestro primer 14 juntos 🥹❤️</p>
         <div class="timer" id="timer"></div>
-        <p>Te amo muchísimo, Sopholoka 💖</p>
+        <p>Te amo muchísimo 💖</p>
     </div>
 </div>
 
@@ -213,51 +194,43 @@ let index = 0;
 const total = slides.children.length;
 
 setInterval(() => {
-    index++;
-    if(index >= total){
-        index = 0;
-        slides.style.transition = "none";
-        slides.style.transform = "translateX(0)";
-        setTimeout(()=>{
-            slides.style.transition = "transform .7s cubic-bezier(.77,0,.18,1)";
-        },50);
-    } else {
-        slides.style.transform = `translateX(-${index * 100}%)`;
-    }
+    index = (index + 1) % total;
+    slides.style.transform = `translateX(-${index * 100}%)`;
 }, 3000);
 
 /* ===== Botón NO que huye ===== */
 const noBtn = document.getElementById("no");
 const yesBtn = document.getElementById("yes");
 const modal = document.getElementById("modal");
-const closeModal = document.getElementById("closeModal");
+const closeBtn = document.getElementById("close");
 const music = document.getElementById("music");
 
-noBtn.addEventListener("mouseover", mover);
-noBtn.addEventListener("click", mover);
-
-function mover(){
-    const cont = document.querySelector(".buttons");
-    const maxX = cont.clientWidth - noBtn.offsetWidth;
-    const maxY = cont.clientHeight - noBtn.offsetHeight;
-
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-}
-
-/* ===== MODAL + CORAZONES + MÚSICA ===== */
-yesBtn.addEventListener("click",()=>{
-    modal.classList.add("active");
-    lanzarCorazones();
-    iniciarCuenta();
-    music.currentTime = 0;
-    music.play().catch(()=>{});
+["mouseenter","touchstart"].forEach(evt=>{
+    noBtn.addEventListener(evt,mover);
 });
 
-closeModal.addEventListener("click",()=>{
+function mover(){
+    const cont=document.querySelector(".buttons");
+    const maxX=cont.clientWidth-noBtn.offsetWidth;
+    const maxY=cont.clientHeight-noBtn.offsetHeight;
+
+    const x=Math.random()*maxX;
+    const y=Math.random()*maxY + 50;
+
+    noBtn.style.left=x+"px";
+    noBtn.style.top=y+"px";
+    noBtn.style.transform=`rotate(${Math.random()*30-15}deg)`;
+}
+
+/* ===== MODAL + MUSICA ===== */
+yesBtn.addEventListener("click",()=>{
+    modal.classList.add("active");
+    music.play();
+    lanzarCorazones();
+    iniciarCuenta();
+});
+
+closeBtn.addEventListener("click",()=>{
     modal.classList.remove("active");
     music.pause();
 });
@@ -282,20 +255,20 @@ function iniciarCuenta(){
 
 /* ===== Corazones ===== */
 function lanzarCorazones(){
-    for(let i=0;i<40;i++){
+    for(let i=0;i<35;i++){
         setTimeout(crearCorazon,i*120);
     }
 }
 
 function crearCorazon(){
-    const h = document.createElement("div");
-    h.className = "heart";
-    h.innerHTML = "💖";
-    h.style.left = Math.random()*100 + "vw";
-    h.style.bottom = "-20px";
-    h.style.fontSize = (18 + Math.random()*22) + "px";
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💖";
+    h.style.left=Math.random()*100+"vw";
+    h.style.bottom="0";
+    h.style.fontSize=(18+Math.random()*20)+"px";
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),5000);
+    setTimeout(()=>h.remove(),4000);
 }
 </script>
 
